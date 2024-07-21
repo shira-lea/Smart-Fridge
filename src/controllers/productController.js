@@ -1,5 +1,6 @@
 // controllers/productController.js
 const Product = require('../models/Product');
+const io = require('../../app').io; // קוד חדש: ייבוא socket.io
 
 exports.getProducts = async (req, res) => {
   try {
@@ -20,6 +21,7 @@ exports.addProduct = async (req, res) => {
       user: req.user.id,
     });
     const product = await newProduct.save();
+    io.emit('productAdded', product);
     res.json(product);
   } catch (err) {
     console.error(err.message);
